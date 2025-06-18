@@ -44,6 +44,9 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                                 <li class="list-group-item">
                                     Address: ${user.address}
                                 </li>
+                                <li class="list-group-item">
+                                    Role: ${user.role.id}
+                                </li>
                             </ul>
                         </div>
                         <a href="/admin/user" class="btn btn-success mt-3"
