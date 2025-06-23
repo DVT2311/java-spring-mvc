@@ -32,7 +32,56 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                             <li class="breadcrumb-item">Dashboard</li>
                             <li class="breadcrumb-item active">Product</li>
                         </ol>
-                        <div>Table Product</div>
+                        <div class="d-flex justify-content-between">
+                            <h3>Table Product</h3>
+                            <a
+                                href="/admin/product/create"
+                                class="btn btn-primary"
+                                >Create a Product</a
+                            >
+                        </div>
+                        <hr />
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Rice</th>
+                                    <th scope="col">Factory</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="product" items="${products}">
+                                    <tr>
+                                        <td>${product.id}</td>
+                                        <td>${product.name}</td>
+                                        <td>${product.price}</td>
+                                        <td>${product.factory}</td>
+                                        <td>
+                                            <a
+                                                href="/admin/product/${product.id}"
+                                                class="btn btn-success ms-2"
+                                            >
+                                                View
+                                            </a>
+                                            <a
+                                                href="/admin/product/update/${product.id}"
+                                                class="btn btn-warning ms-2"
+                                            >
+                                                Update
+                                            </a>
+                                            <a
+                                                href="/admin/product/delete/${product.id}"
+                                                class="btn btn-danger ms-2"
+                                            >
+                                                Delete
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
                     </div>
                 </main>
 

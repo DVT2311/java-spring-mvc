@@ -29,9 +29,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                     <div class="container mt-5">
                         <h1 class="mt-4">Manage User</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">
-                                Dashboard / User
-                            </li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                            <li class="breadcrumb-item active">User</li>
                         </ol>
                         <div class="d-flex justify-content-between">
                             <h3>Table users</h3>

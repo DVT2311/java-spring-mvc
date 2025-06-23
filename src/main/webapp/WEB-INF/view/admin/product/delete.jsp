@@ -13,7 +13,7 @@ uri="http://www.springframework.org/tags/form" %>
         />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Delete User - SB Admin</title>
+        <title>Delete Product - SB Admin</title>
         <link href="/css/styles.css" rel="stylesheet" />
         <script
             src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
@@ -28,20 +28,22 @@ uri="http://www.springframework.org/tags/form" %>
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Manage User</h1>
+                        <h1 class="mt-4">Manage Product</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item">Dashboard</li>
-                            <li class="breadcrumb-item active">Delete User</li>
+                            <li class="breadcrumb-item active">
+                                Delete Product
+                            </li>
                         </ol>
                         <div class="container mt-5">
                             <div class="row">
                                 <div class="col-md-8 col-12 mx-auto">
-                                    <h3>Delete a user with id = ${id}</h3>
+                                    <h3>Delete a Product with id = ${id}</h3>
                                     <hr />
                                     <form:form
                                         method="post"
-                                        action="/admin/user/delete"
-                                        modelAttribute="newUser"
+                                        action="/admin/product/delete"
+                                        modelAttribute="newProduct"
                                     >
                                         <div
                                             class="alert alert-danger"
