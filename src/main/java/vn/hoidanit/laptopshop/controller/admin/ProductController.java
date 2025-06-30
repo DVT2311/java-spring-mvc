@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
 import vn.hoidanit.laptopshop.domain.Product;
-import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UploadService;
 
@@ -102,7 +101,7 @@ public class ProductController {
         }
 
         Product currentProduct = this.productService.getProductById(hoidanit.getId());
-        System.out.println(">>>>>>>>>>>>>>>>>>" + currentProduct);
+        // System.out.println(">>>>>>>>>>>>>>>>>>" + currentProduct);
         if (currentProduct != null) {
             if (!file.isEmpty()) {
                 String img = this.uploadService.handleSaveUploadFile(file, "product");
