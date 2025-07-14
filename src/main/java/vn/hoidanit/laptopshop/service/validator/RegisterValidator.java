@@ -19,10 +19,55 @@ public class RegisterValidator implements ConstraintValidator<RegisterChecked, R
     public boolean isValid(RegisterDTO user, ConstraintValidatorContext context) {
         boolean valid = true;
 
+        // Check firstName not null
+        if (user.getFirstName() == null || user.getFirstName().trim().isEmpty()) {
+            context.buildConstraintViolationWithTemplate("FirstName khong duoc de trong")
+                    .addPropertyNode("firstName")
+                    .addConstraintViolation()
+                    .disableDefaultConstraintViolation();
+            valid = false;
+        }
+
+        // Check firstName not null
+        if (user.getLastName() == null || user.getFirstName().trim().isEmpty()) {
+            context.buildConstraintViolationWithTemplate("LastName khong duoc de trong")
+                    .addPropertyNode("lastName")
+                    .addConstraintViolation()
+                    .disableDefaultConstraintViolation();
+            valid = false;
+        }
+
+        // Check email not null
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            context.buildConstraintViolationWithTemplate("PassWord khong duoc de trong")
+                    .addPropertyNode("password")
+                    .addConstraintViolation()
+                    .disableDefaultConstraintViolation();
+            valid = false;
+        }
+
+        // Check email not null
+        if (user.getConfirmPassword() == null || user.getConfirmPassword().trim().isEmpty()) {
+            context.buildConstraintViolationWithTemplate("ConfirmPassword khong duoc de trong")
+                    .addPropertyNode("confirmPassword")
+                    .addConstraintViolation()
+                    .disableDefaultConstraintViolation();
+            valid = false;
+        }
+
         // Check if password fields match
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             context.buildConstraintViolationWithTemplate("Passwords must match")
                     .addPropertyNode("confirmPassword")
+                    .addConstraintViolation()
+                    .disableDefaultConstraintViolation();
+            valid = false;
+        }
+
+        // Check email not null
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            context.buildConstraintViolationWithTemplate("Email khong duoc de trong")
+                    .addPropertyNode("email")
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
             valid = false;

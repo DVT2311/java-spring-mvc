@@ -79,7 +79,7 @@ public class UserController {
 
         // Validate
         if (newUserBindingResult.hasErrors()) {
-            return "/admin/user/create";
+            return "admin/user/create";
         }
 
         String avater = this.uploadService.handleSaveUploadFile(file, "avatar");
@@ -108,7 +108,7 @@ public class UserController {
             currentUser.setPhone(hoidanit.getPhone());
             this.userService.handleSaveUser(currentUser);
         }
-        return "redirect:/admin/user";
+        return "redirect:admin/user";
     }
 
     @GetMapping("/admin/user/delete/{id}")
