@@ -37,7 +37,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                                     height: 20px;
                                     min-width: 20px;
                                 "
-                                >3</span
+                            >
+                                ${sessionScope.sum}</span
                             >
                         </a>
                         <div class="dropdown my-auto">
@@ -69,11 +70,11 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                                             border-radius: 50%;
                                             overflow: hidden;
                                         "
-                                        src="/images/product/1711078092373-asus-01.png"
+                                        src="/images/avatar/${sessionScope.avatar}"
                                     />
                                     <div class="text-center my-3">
                                         <c:out
-                                            value="${pageContext.request.userPrincipal.name}"
+                                            value="${sessionScope.fullName}"
                                         />
                                     </div>
                                 </li>

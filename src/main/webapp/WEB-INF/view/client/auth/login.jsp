@@ -80,6 +80,17 @@ uri="http://www.springframework.org/tags/form" %>
                                                 >
                                             </div>
                                             <div>
+                                                <!-- checkbox remember me -->
+                                                <input
+                                                    type="checkbox"
+                                                    name="remember-me"
+                                                    id="remember-me"
+                                                />
+                                                <label for="remember-me"
+                                                    >Remember Me</label
+                                                >
+                                            </div>
+                                            <div>
                                                 <input
                                                     type="hidden"
                                                     name="${_csrf.parameterName}"

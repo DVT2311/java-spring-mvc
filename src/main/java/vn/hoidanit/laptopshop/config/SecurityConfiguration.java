@@ -5,11 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 import jakarta.servlet.DispatcherType;
 import vn.hoidanit.laptopshop.service.CustomUserDetailsService;
@@ -19,59 +21,83 @@ import vn.hoidanit.laptopshop.service.UserService;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserService userService) {
-        return new CustomUserDetailsService(userService);
-    }
+        @Bean
+        public UserDetailsService userDetailsService(UserService userService) {
+                return new CustomUserDetailsService(userService);
+        }
 
-    @Bean
-    public DaoAuthenticationProvider authProvider(
-            PasswordEncoder passwordEncoder,
-            UserDetailsService userDetailsService) {
+        @Bean
+        public DaoAuthenticationProvider authProvider(
+                        PasswordEncoder passwordEncoder,
+                        UserDetailsService userDetailsService) {
 
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        // authProvider.setHideUserNotFoundExceptions(false);
+                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+                authProvider.setUserDetailsService(userDetailsService);
+                authProvider.setPasswordEncoder(passwordEncoder);
+                // authProvider.setHideUserNotFoundExceptions(false);
 
-        return authProvider;
-    }
+                return authProvider;
+        }
 
-    @Bean
-    public AuthenticationSuccessHandler customSuccessHandler() {
-        return new CustomSuccessHandler();
-    }
+        @Bean
+        public AuthenticationSuccessHandler customSuccessHandler() {
+                return new CustomSuccessHandler();
+        }
 
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authorize -> authorize
-                        .dispatcherTypeMatchers(DispatcherType.FORWARD,
-                                DispatcherType.INCLUDE)
-                        .permitAll()
+        @Bean
+        public SpringSessionRememberMeServices rememberMeServices() {
+                SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
+                // optionally customize
+                rememberMeServices.setAlwaysRemember(true);
+                return rememberMeServices;
+        }
 
-                        .requestMatchers("/", "/login", "/product/**", "/register", "/client/**", "/css/**", "/js/**",
-                                "/images/**")
-                        .permitAll()
+        @Bean
+        SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
+                // v6 lamda
+                http
+                                .authorizeHttpRequests(authorize -> authorize
+                                                .dispatcherTypeMatchers(DispatcherType.FORWARD,
+                                                                DispatcherType.INCLUDE)
+                                                .permitAll()
 
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/", "/login", "/product/**", "/register",
+                                                                "/client/**", "/css/**", "/js/**",
+                                                                "/images/**")
+                                                .permitAll()
 
-                        .anyRequest().authenticated())
+                                                .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .failureUrl("/login?error")
-                        .successHandler(customSuccessHandler())
-                        .permitAll())
+                                                .anyRequest().authenticated())
 
-                .exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
+                                .sessionManagement((sessionManagement) -> sessionManagement
+                                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                                                .invalidSessionUrl("/logout?expired")
+                                                .maximumSessions(1)
+                                                .maxSessionsPreventsLogin(false))
 
-        return http.build();
-    }
+                                .logout(logout -> logout.deleteCookies("SESSIONID").invalidateHttpSession(true))
 
+                                .rememberMe(r -> r
+                                                // .key("mySuperSecretKey123!@#") // ✅ key phải cố định và đủ mạnh
+                                                // .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 ngày
+                                                // .rememberMeParameter("remember-me")
+                                                // .userDetailsService(userDetailsService))
+                                                .rememberMeServices(rememberMeServices()))
+
+                                .formLogin(formLogin -> formLogin
+                                                .loginPage("/login")
+                                                .failureUrl("/login?error")
+                                                .successHandler(customSuccessHandler())
+                                                .permitAll())
+
+                                .exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
+
+                return http.build();
+        }
 }

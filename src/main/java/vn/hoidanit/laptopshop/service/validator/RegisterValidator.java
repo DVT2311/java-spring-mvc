@@ -37,7 +37,7 @@ public class RegisterValidator implements ConstraintValidator<RegisterChecked, R
             valid = false;
         }
 
-        // Check email not null
+        // Check password not null
         if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
             context.buildConstraintViolationWithTemplate("PassWord khong duoc de trong")
                     .addPropertyNode("password")
@@ -46,7 +46,7 @@ public class RegisterValidator implements ConstraintValidator<RegisterChecked, R
             valid = false;
         }
 
-        // Check email not null
+        // Check confirmPassword not null
         if (user.getConfirmPassword() == null || user.getConfirmPassword().trim().isEmpty()) {
             context.buildConstraintViolationWithTemplate("ConfirmPassword khong duoc de trong")
                     .addPropertyNode("confirmPassword")
