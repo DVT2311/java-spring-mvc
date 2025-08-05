@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+        <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
             <!DOCTYPE html>
             <html lang="en">
 
@@ -70,7 +71,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach var="cartDetail" items="${cartDetails}">
+                                    <c:if test="${ empty cartDetails}">
+                                        <tr>
+                                            <td colspan="6">
+                                                Không có sản phẩm trong giỏ hàng
+                                            </td>
+                                        </tr>
+                                    </c:if>
+                                    <c:forEach var="cartDetail" items="${cartDetails}" varStatus="status">
                                         <tr>
                                             <th scope="row">
                                                 <div class="d-flex align-items-center">
@@ -100,7 +108,10 @@
                                                     </div>
                                                     <input type="text"
                                                     class="form-control form-control-sm text-center border-0"
-                                                    value="${cartDetail.quantity}">
+                                                    value="${cartDetail.quantity}"
+                                                    data-cart-detail-id="${cartDetail.id}"
+                                                    data-cart-detail-price="${cartDetail.price}"
+                                                    data-cart-detail-index="${status.index}">
                                                     <div class="input-group-btn">
                                                         <button class="btn btn-sm btn-plus rounded-circle bg-light border">
                                                             <i class="fa fa-plus"></i>
@@ -109,15 +120,19 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <p class="mb-0 mt-4">
-                                                    <fmt:formatNumber type="number"
+                                                <p class="mb-0 mt-4" data-cart-detail-id="${cartDetail.id}">
+                                                    <fmt:formatNumber type="number" 
                                                         value="${cartDetail.price * cartDetail.quantity}" /> đ
                                                 </p>
                                             </td>
                                             <td>
-                                                <button class="btn btn-md rounded-circle bg-light border mt-4">
-                                                    <i class="fa fa-times text-danger"></i>
-                                                </button>
+                                                <form method="post" action="/delete-cart-product/${cartDetail.id}">
+                                                    <input type="hidden" name="${_csrf.parameterName}"
+                                                        value="${_csrf.token}" />
+                                                    <button class="btn btn-md rounded-circle bg-light border mt-4">
+                                                        <i class="fa fa-times text-danger"></i>
+                                                    </button>
+                                                </form>
                                             </td>
     
                                         </tr>
@@ -134,7 +149,7 @@
                                         </h1>
                                         <div class="d-flex justify-content-between mb-4">
                                             <h5 class="mb-0 me-4">Tạm tính:</h5>
-                                            <p class="mb-0">
+                                            <p class="mb-0" data-cart-total-price="${totalPrice}">
                                                 <fmt:formatNumber type="number" value="${totalPrice}" /> đ
                                             </p>
                                         </div>
@@ -147,17 +162,42 @@
                                     </div>
                                     <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                                         <h5 class="mb-0 ps-4 me-4">Tổng số tiền</h5>
-                                        <p class="mb-0 pe-4">
+                                        <p class="mb-0 pe-4" data-cart-total-price="${totalPrice}">
                                             <fmt:formatNumber type="number" value="${totalPrice}" /> đ
                                         </p>
                                     </div>
-                                    <button
-                                        class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                                        type="button">Xác nhận đặt hàng</button>
+
+                                    <form:form action="/confirm-checkout" method="post" modelAttribute="cart">
+                                                <input type="hidden" name="${_csrf.parameterName}"
+                                                    value="${_csrf.token}" />
+                                                <div style="display: block;">
+                                                    <c:forEach var="cartDetail" items="${cart.cartDetails}"
+                                                        varStatus="status">
+                                                        <div class="mb-3">
+                                                            <div class="form-group">
+                                                                <label>Id:</label>
+                                                                <form:input class="form-control" type="text"
+                                                                    value="${cartDetail.id}"
+                                                                    path="cartDetails[${status.index}].id" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Quantity:</label>
+                                                                <form:input class="form-control" type="text"
+                                                                    value="${cartDetail.quantity}"
+                                                                    path="cartDetails[${status.index}].quantity" />
+                                                            </div>
+                                                        </div>
+                                                    </c:forEach>
+                                                </div>
+                                                <button
+                                                    class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">Xác
+                                                    nhận thanh toán
+                                                </button>
+                                    </form:form>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <!-- </div> -->
                     </div>
                 </div>
                 <!-- Cart Page End -->
